@@ -4,6 +4,8 @@ You can try the live web app here: https://kelly-portfolio.streamlit.app/
 
 I wanted to find a mathematically sound way to manage a portfolio of prediction market bets. This web app allows you to search for Polymarket events, calculate their Expected Value (EV), and run a Simultaneous Kelly Criterion optimization to size your bets while accounting for structural correlations between them.
 
+![](docs/pic2.jpg)
+
 ## 1. Market Data Retrieval (`api_client.py`)
 
 This module connects to the Polymarket API to fetch live events and their order books, bypassing stringified JSON bugs in their Gamma API and extracting true Bid-Ask spreads.
@@ -33,9 +35,6 @@ Best Ask (Buy Price):  $0.55
 Best Bid (Sell Price): $0.53
 Spread:                $0.02
 ```
-
-![](docs/pic2.jpg)
-
 ## 2. Portfolio Math & Logic (`math_logic.py`)
 
 This is the core mathematical engine. It calculates individual bet metrics and runs the complex portfolio optimization based on Mean-Variance Kelly.
