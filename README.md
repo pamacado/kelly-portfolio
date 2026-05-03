@@ -1,6 +1,6 @@
 ## TL;DR
 
-You can try the live web app here: https://[your-app-name].streamlit.app/
+You can try the live web app here: https://kelly-portfolio.streamlit.app/
 
 I wanted to find a mathematically sound way to manage a portfolio of prediction market bets. This web app allows you to search for Polymarket events, calculate their Expected Value (EV), and run a Simultaneous Kelly Criterion optimization to size your bets while accounting for structural correlations between them.
 
