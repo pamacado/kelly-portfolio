@@ -8,7 +8,7 @@ from math_logic import PortfolioMath
 # ==========================================
 # PAGE CONFIGURATION
 # ==========================================
-st.set_page_config(page_title="Quant Portfolio Manager", page_icon="🦈", layout="wide")
+st.set_page_config(page_title="Quant Portfolio Manager", layout="wide")
 
 st.markdown("""
     <style>
@@ -32,7 +32,7 @@ if 'current_options' not in st.session_state:
 # SIDEBAR
 # ==========================================
 with st.sidebar:
-    st.markdown("### 🏦 Global Settings")
+    st.markdown("### Global Settings")
     bankroll = st.number_input("Total Bankroll ($)", min_value=100, value=1000, step=100)
     hurdle_rate = st.slider("Hurdle Rate (Annual %)", 1.0, 20.0, 4.5, 0.5) / 100.0
     
@@ -41,16 +41,16 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown(f"**Bets in Portfolio:** {len(st.session_state.portfolio)}")
-    if st.button("🗑️ Clear Portfolio"):
+    if st.button("Clear Portfolio"):
         for key in list(st.session_state.keys()):
             if key.startswith("corr_"):
                 del st.session_state[key]
         st.session_state.portfolio = []
         st.rerun()
 
-st.title("📊 Simultaneous Kelly Optimizer")
+st.title("Simultaneous Kelly Optimizer")
 
-tab1, tab2 = st.tabs(["🔍 1. Find & Add Bets", "🧠 2. Optimize Portfolio"])
+tab1, tab2 = st.tabs(["1. Find & Add Bets", "2. Optimize Portfolio"])
 
 # ==========================================
 # TAB 1: ADD BETS
@@ -76,7 +76,7 @@ with tab1:
             true_prob_pct = st.number_input("Your True Probability (%)", min_value=1, max_value=99, value=50)
             true_prob = true_prob_pct / 100.0
 
-        if st.button("➕ Add to Portfolio", type="primary"):
+        if st.button("Add to Portfolio", type="primary"):
             client = PolymarketClient()
             market_data = client.get_order_book(selected_option["token_id"])
             
@@ -95,9 +95,9 @@ with tab1:
                     "analysis": analysis
                 })
                 if analysis.get('date_fallback_used'):
-                    st.toast("Added ✅ — Warning: using 30-day fallback for end date", icon="⚠️")
+                    st.toast("Added - Warning: using 30-day fallback for end date")
                 else:
-                    st.toast("✅ Added to Portfolio successfully!")
+                    st.toast("Added to Portfolio successfully!")
                 st.rerun()
             else:
                 st.error("Market lacks liquidity.")
@@ -119,7 +119,7 @@ with tab2:
                 "Market Price": f"${bet['market_data']['best_ask']:.3f}",
                 "Expected Value": f"${bet['analysis']['expected_value']:.3f}",
                 "Full Kelly": f"{bet['analysis']['recommended_bankroll_pct']*100:.1f}%",
-                "Viable?": "✅" if bet['analysis']['is_viable'] else "❌"
+                "Viable?": "Yes" if bet['analysis']['is_viable'] else "No"
             })
         st.table(pd.DataFrame(df_data))
         st.caption("Viable = positive EV **and** annualized ROI ≥ hurdle rate **and** spread < 5¢")
@@ -129,7 +129,7 @@ with tab2:
         # ==========================================
         # CORRELATION SETTINGS
         # ==========================================
-        st.markdown("### 🔗 Bet Correlations")
+        st.markdown("### Bet Correlations")
         st.caption("-1 = opposite outcomes · 0 = independent · +1 = move together")
 
         math_engine = PortfolioMath()
@@ -150,8 +150,7 @@ with tab2:
                         default_corr = math_engine.get_structural_correlation(bet_i, bet_j)
 
                         same_mkt = default_corr != 0.0
-                        tag = "🔗" if same_mkt else "↔"
-                        label = f"{tag} #{i} vs #{j}"
+                        label = f"#{i} vs #{j}" + (" (Linked)" if same_mkt else "")
 
                         val = st.slider(
                             label, -1.0, 1.0, float(default_corr), 0.05,
@@ -163,7 +162,7 @@ with tab2:
         st.markdown("---")
         st.caption(f"Risk scaling: **{int(kelly_fraction_val * 100)}% Kelly** (set in sidebar)")
 
-        if st.button("🚀 Run Simultaneous Kelly Optimization", type="primary", use_container_width=True):
+        if st.button("Run Simultaneous Kelly Optimization", type="primary", use_container_width=True):
             with st.spinner("Calculating Covariance Matrix and optimizing weights..."):
 
                 weights, cov_matrix = math_engine.optimize_portfolio(
@@ -172,7 +171,7 @@ with tab2:
                     correlations=correlations
                 )
 
-                st.markdown("### 🏆 Allocation Results")
+                st.markdown("### Allocation Results")
 
                 labels = []
                 values = []
@@ -202,7 +201,7 @@ with tab2:
                     fig_cov.update_layout(paper_bgcolor="rgba(0,0,0,0)", font={'color': "white"})
                     st.plotly_chart(fig_cov, use_container_width=True)
 
-                st.markdown("### 💰 Execution Orders")
+                st.markdown("### Execution Orders")
                 for i, weight in enumerate(weights):
                     if weight > 0.001:
                         bet_amount = bankroll * weight
@@ -211,4 +210,4 @@ with tab2:
                         if is_viable:
                             st.success(f"**BUY:** ${bet_amount:.2f} of **#{i} {bet_info['name']}**")
                         else:
-                            st.warning(f"⚠️ **BUY:** ${bet_amount:.2f} of **#{i} {bet_info['name']}** — Not viable (low ROI or wide spread)")
+                            st.warning(f"**BUY:** ${bet_amount:.2f} of **#{i} {bet_info['name']}** — Not viable (low ROI or wide spread)")
