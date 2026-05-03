@@ -34,6 +34,8 @@ Best Bid (Sell Price): $0.53
 Spread:                $0.02
 ```
 
+![](docs/pic2.jpg)
+
 ## 2. Portfolio Math & Logic (`math_logic.py`)
 
 This is the core mathematical engine. It calculates individual bet metrics and runs the complex portfolio optimization based on Mean-Variance Kelly.
@@ -57,6 +59,8 @@ The frontend of the project, built with Streamlit. It acts as a "shopping cart" 
 
 * **Find & Add Bets:** Users can paste a Polymarket URL, select an outcome, input their "True Probability", and add the bet to their portfolio if it passes the viability checks.
 * **Portfolio Optimization:** A dashboard where users can view all their alpha ideas and adjust the correlation sliders between any pair of bets. Running the optimization generates a pie chart of the optimal allocation (including cash reserves) and a heatmap of the Asset Covariance Matrix using Plotly. It outputs exact dollar amounts to execute for each bet.
+
+![](docs/pic1.jpg)
 
 ## Conclusions
 
