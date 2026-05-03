@@ -64,15 +64,7 @@ It was a very interesting project to learn about the Simultaneous Kelly Criterio
 
 Some other things to try are implementing automated execution via Polymarket's API so the calculated orders are placed directly from the app, expanding the `get_structural_correlation` function to automatically scrape and infer correlations across different markets, or adding support for other prediction markets like Kalshi.
 
-## Built with
-
-* Python
-* Streamlit (for the UI)
-* NumPy & SciPy (for the Simultaneous Kelly Optimization)
-* Plotly (for data visualization)
-* yfinance / Requests (for API interactions)
-
-## How to run it locally
+## Run it locally
 
 If you want to test the code on your own machine, clone this repository and install the dependencies:
 
